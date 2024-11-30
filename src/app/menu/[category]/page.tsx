@@ -1,4 +1,4 @@
-//import { pizzas } from "@/data";
+[//import { pizzas } from "@/data";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
