@@ -11,11 +11,11 @@ export const GET = async (
   try {
     const product = await prisma.product.findUnique({
       where: {
-        id: id,
+        id: id, // Match the product with the given `id`
       },
     });
 
-    return new NextResponse(JSON.stringify(product), { status: 200 });
+    return new NextResponse(JSON.stringify(product), { status: 200 }); // Return the product data
   } catch (err) {
     console.log(err);
     return new NextResponse(
@@ -35,7 +35,7 @@ export const DELETE = async (
   try {
     await prisma.product.delete({
       where: {
-        id: id,
+        id: id, // Match the product with the given `id` for deletion
       },
     });
 

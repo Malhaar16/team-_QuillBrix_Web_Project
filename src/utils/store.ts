@@ -2,11 +2,25 @@ import { ActionTypes, CartType } from "@/types/types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+/**
+ * Initial state for the cart.
+ * - `products`: Array of cart items.
+ * - `totalItems`: Total count of items in the cart.
+ * - `totalPrice`: Total cost of all items in the cart.
+ */
 const INITIAL_STATE = {
     products: [],
     totalItems: 0,
     totalPrice: 0,
 };
+
+/**
+ * Zustand store with persist middleware for cart state management.
+ * - `addToCart`: Adds an item to the cart or updates its quantity if already present.
+ * - `removeFromCart`: Removes an item from the cart and updates totals.
+ * 
+ * Persist ensures the cart data remains even after a page refresh.
+ */
 
 export const useCartStore = create(
     persist<CartType & ActionTypes>(
@@ -14,7 +28,15 @@ export const useCartStore = create(
             products: INITIAL_STATE.products,
             totalItems: INITIAL_STATE.totalItems,
             totalPrice: INITIAL_STATE.totalPrice,
-            addToCart(item) {
+
+            /**
+             * Zustand store with persist middleware for cart state management.
+             * - `addToCart`: Adds an item to the cart or updates its quantity if already present.
+             * - `removeFromCart`: Removes an item from the cart and updates totals.
+             * 
+             * Persist ensures the cart data remains even after a page refresh.
+             */
+           addToCart(item) {
                 const products = get().products;
                 const productInState = products.find((product) => product.id === item.id);
             
@@ -41,7 +63,11 @@ export const useCartStore = create(
                 }
             },
             
-            
+             /**
+             * Removes an item from the cart.
+             * - Filters the item out of the cart products.
+             * - Recalculates total items and total price.
+             */
             removeFromCart(item) {
                 set((state) => {
                     const updatedProducts = state.products.filter(

@@ -1,5 +1,11 @@
 //import { featuredProducts } from "@/data";
 
+/**
+ * Featured Component
+ * 
+ * This component fetches and displays featured products. It uses dynamic styling for responsiveness 
+ * and interactive effects, such as hover transitions.
+ */
 import Image from "next/image";
 import React from "react";
 import { ProductType } from "@/types/types";
@@ -7,7 +13,7 @@ import { ProductType } from "@/types/types";
 
 const getData = async ()=>{
   const res = await fetch("http://localhost:3000/api/products",{
-    cache:"no-store"
+    cache:"no-store" //Prevents caching for fresh data on every render.
   })
 
   if(!res.ok){
@@ -15,7 +21,7 @@ const getData = async ()=>{
     
   }
 
-  return res.json()
+  return res.json() // Returns the parsed JSON response.
 }
 
 const Featured = async () => {

@@ -8,10 +8,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const CartPage = () => {
+  // Destructuring the cart state: `products` (cart items), `totalItems` (count of items), `totalPrice` (total price), `removeFromCart` (function to remove an item).
   const { products, totalItems, totalPrice, removeFromCart } = useCartStore();
-  const { data: session } = useSession();
+  // Router instance to navigate to different pages.
   const router = useRouter();
 
+
+  // Rehydrate the cart state from local storage on component mount using `useEffect` to ensure persistent state.
   useEffect(() => {
     useCartStore.persist.rehydrate();
   }, []);

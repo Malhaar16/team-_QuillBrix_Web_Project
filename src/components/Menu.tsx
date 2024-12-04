@@ -12,8 +12,12 @@ const links = [
   { id: 4, title: "Contact", url: "/contact" },
 ];
 
+/**
+ * Menu Component
+ * Renders a responsive, interactive menu with user authentication support.
+ */
 const Menu = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // State to manage menu visibility
   
   // TEMPORARY
   const user = false;

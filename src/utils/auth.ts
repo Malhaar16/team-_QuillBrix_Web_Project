@@ -16,6 +16,13 @@ declare module "next-auth/jwt" {
   }
 }
 
+
+/**
+ * Configure NextAuth for authentication.
+ * - Uses PrismaAdapter for database interactions.
+ * - GoogleProvider for OAuth2 authentication.
+ * - Custom callbacks to include `isAdmin` in both JWT and session objects.
+ */
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {

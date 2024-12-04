@@ -13,7 +13,7 @@ const getData = async (id: string) => {
     throw new Error("Failed!");
   }
 
-  return res.json();
+  return res.json(); // Returns the parsed JSON response containing product data
 };
 
 const SingleProductPage = async ({ params }: { params: { id: string } }) => {

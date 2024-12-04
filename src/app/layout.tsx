@@ -20,7 +20,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Team QuillBrix",
+  title: "Team QuillBrix Restrauent Application",
   description: "Fast Food Restrauent by Team QuillBrix",
 };
 

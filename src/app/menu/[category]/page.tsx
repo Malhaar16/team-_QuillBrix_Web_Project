@@ -6,7 +6,7 @@ import { ProductType } from "@/types/types";
 
 const getData = async (category:string)=>{
   const res = await fetch(`http://localhost:3000/api/products?cat=${category}`,{
-    cache:"no-store"
+    cache:"no-store" // Ensures data is not cached
   })
 
   if(!res.ok){
@@ -17,13 +17,14 @@ const getData = async (category:string)=>{
   return res.json()
 }
 
+// Type definition for the props passed to the component (category param)
 type Props = {
   params:{category:string}
 }
 
 
 const CategoryPage = async ({params}:Props) => {
-  const products:ProductType[] = await getData(params.category)
+  const products:ProductType[] = await getData(params.category)  // Fetch products based on category
 
   return (
     <div className="flex flex-wrap text-red-500">
