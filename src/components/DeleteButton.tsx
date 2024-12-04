@@ -13,10 +13,6 @@ const DeleteButton = ({ id }: { id: string }) => {
     return <p>Loading...</p>;
   }
 
-  if (status === "unauthenticated" || !session?.user.isAdmin) {
-    return;
-  }
-
   const handleDelete = async () => {
     const res = await fetch(`http://localhost:3000/api/products/${id}`, {
       method: "DELETE",
@@ -36,7 +32,7 @@ const DeleteButton = ({ id }: { id: string }) => {
       className="bg-red-400 hover:bg-red-500 text-white p-2 rounded-full ml-6"
       onClick={handleDelete}
     >
-      <Image src="/delete.png" alt="" width={20} height={20} />
+      <Image src="/temporary/delete.png" alt="" width={20} height={20} />
     </button>
   );
 };

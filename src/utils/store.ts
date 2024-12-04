@@ -16,41 +16,55 @@ export const useCartStore = create(
             totalPrice: INITIAL_STATE.totalPrice,
             addToCart(item) {
                 const products = get().products;
-                const productInState = products.find(
-                    (product) => product.id === item.id
-                );
-
+                const productInState = products.find((product) => product.id === item.id);
+            
                 if (productInState) {
                     const updatedProducts = products.map((product) =>
                         product.id === productInState.id
                             ? {
-                                ...item,
-                                quantity: item.quantity + product.quantity,
-                                price: item.price + product.price,
-                            }
-                            : item
+                                  ...product,
+                                  quantity: product.quantity + item.quantity,
+                              }
+                            : product
                     );
                     set((state) => ({
                         products: updatedProducts,
                         totalItems: state.totalItems + item.quantity,
-                        totalPrice: state.totalPrice + item.price,
+                        totalPrice: state.totalPrice + item.price * item.quantity,
                     }));
                 } else {
                     set((state) => ({
-                        products: [...state.products, item],
+                        products: [...state.products, { ...item }],
                         totalItems: state.totalItems + item.quantity,
-                        totalPrice: state.totalPrice + item.price,
+                        totalPrice: state.totalPrice + item.price * item.quantity,
                     }));
                 }
             },
+            
+            
             removeFromCart(item) {
-                set((state) => ({
-                    products: state.products.filter((product) => product.id !== item.id),
-                    totalItems: state.totalItems - item.quantity,
-                    totalPrice: state.totalPrice - item.price,
-                }));
-            },
-        }),
+                set((state) => {
+                    const updatedProducts = state.products.filter(
+                        (product) => product.id !== item.id
+                    );
+            
+                    const totalItems = updatedProducts.reduce(
+                        (acc, product) => acc + product.quantity,
+                        0
+                    );
+                    const totalPrice = updatedProducts.reduce(
+                        (acc, product) => acc + product.price * product.quantity,
+                        0
+                    );
+            
+                    return {
+                        products: updatedProducts,
+                        totalItems,
+                        totalPrice,
+                    };
+                });
+            }
+            }),
         { name: "cart", skipHydration: true }
     )
 );

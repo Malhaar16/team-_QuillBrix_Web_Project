@@ -3,6 +3,7 @@ import Menu from "./Menu";
 import Link from "next/link";
 import CartIcon from "./CartIcon";
 import Image from "next/image";
+import UserLinks from "./UserLinks";
 
 const Navbar = () => {
   const user = false; // Set user status here
@@ -37,11 +38,7 @@ const Navbar = () => {
 
       {/* RIGHT LINKS */}
       <div className="hidden md:flex gap-4 items-center">
-        {!user ? (
-          <Link href="/login" className="text-white hover:text-gray-300">Login</Link>
-        ) : (
-          <Link href="/orders" className="text-white hover:text-gray-300">Orders</Link>
-        )}
+        <UserLinks/>
         <CartIcon />
       </div>
     </div>

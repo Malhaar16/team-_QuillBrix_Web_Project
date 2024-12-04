@@ -1,109 +1,57 @@
-"use client";
-
-import {
-    LinkAuthenticationElement,
-    PaymentElement,
-    useElements,
-    useStripe,
-} from "@stripe/react-stripe-js";
+// /components/CheckoutForm.tsx
 import { useEffect, useState } from "react";
-import AddressForm from "./AddressForm";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { useRouter } from "next/router";
 
-const CheckoutForm = () => {
-    const stripe = useStripe();
-    const elements = useElements();
+const CheckoutForm = ({ clientSecret, totalPrice }: { clientSecret: string; totalPrice: number }) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const router = useRouter();
 
-    const [email, setEmail] = useState("");
-    const [message, setMessage] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!stripe) {
-            return;
-        }
+  useEffect(() => {
+    if (!stripe || !elements) return;
+  }, [stripe, elements]);
 
-        const clientSecret = new URLSearchParams(window.location.search).get(
-            "payment_intent_client_secret"
-        );
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-        if (!clientSecret) {
-            return;
-        }
+    if (!stripe || !elements) return;
 
-        stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-            switch (paymentIntent?.status) {
-                case "succeeded":
-                    setMessage("Payment succeeded!");
-                    break;
-                case "processing":
-                    setMessage("Your payment is processing.");
-                    break;
-                case "requires_payment_method":
-                    setMessage("Your payment was not successful, please try again.");
-                    break;
-                default:
-                    setMessage("Something went wrong.");
-                    break;
-            }
-        });
-    }, [stripe]);
+    const cardElement = elements.getElement(CardElement);
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    if (cardElement) {
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+        },
+      });
 
-        if (!stripe || !elements) {
-            // Stripe.js hasn't yet loaded.
-            // Make sure to disable form submission until Stripe.js has loaded.
-            return;
-        }
+      if (error) {
+        setErrorMessage(error.message || "Payment failed");
+      } else if (paymentIntent?.status === "succeeded") {
+        router.push("/thank-you"); // Redirect after successful payment
+      }
+    }
+  };
 
-        setIsLoading(true);
-
-        const { error } = await stripe.confirmPayment({
-            elements,
-            confirmParams: {
-                // Make sure to change this to your payment completion page
-                return_url: "http://localhost:3000/success",
-            },
-        });
-
-        // This point will only be reached if there is an immediate error when
-        // confirming the payment. Otherwise, your customer will be redirected to
-        // your `return_url`. For some payment methods like iDEAL, your customer will
-        // be redirected to an intermediate site first to authorize the payment, then
-        // redirected to the `return_url`.
-        if (error.type === "card_error" || error.type === "validation_error") {
-            setMessage(error.message || "Something went wrong!");
-        } else {
-            setMessage("An unexpected error occurred.");
-        }
-
-        setIsLoading(false);
-    };
-
-    return (
-        <form
-            id="payment-form"
-            onSubmit={handleSubmit}
-            className="min-h-[calc(100vh-6rem)] md:min-h-[calc(100vh-15rem)] p-4 lg:px-20 xl:px-40 flex flex-col gap-8"
-        >
-            <LinkAuthenticationElement id="link-authentication-element" />
-            <PaymentElement
-                id="payment-element"
-                options={{
-                    layout: "tabs",
-                }}
-            />
-            <AddressForm />
-            <button disabled={isLoading || !stripe || !elements} id="submit" className="bg-red-500 text-white p-4 rounded-md w-28">
-                <span id="button-text">
-                    {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-                </span>
-            </button>
-            {/* Show any error or success messages */}
-            {message && <div id="payment-message">{message}</div>}
-        </form>
-    );
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <CardElement />
+      <div className="flex justify-between">
+        <span>Total Amount: ${totalPrice}</span>
+      </div>
+      {errorMessage && <span className="text-red-500">{errorMessage}</span>}
+      <button
+        type="submit"
+        className="bg-blue-500 text-white p-3 rounded-md mt-4"
+        disabled={!stripe}
+      >
+        Pay Now
+      </button>
+    </form>
+  );
 };
 
 export default CheckoutForm;

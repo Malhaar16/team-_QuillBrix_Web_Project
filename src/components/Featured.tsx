@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import React from "react";
-
 import { ProductType } from "@/types/types";
 
 
@@ -44,9 +43,7 @@ const Featured = async () => {
               <h1 className="text-xl font-bold uppercase xl:text-2xl 2xl:text-3xl">{item.title}</h1>
               <p className="p-4 2xl:p-8">{item.desc}</p>
               <span className="text-xl font-bold">${item.price}</span>
-              <button className="bg-red-500 text-white p-2 rounded-md">
-                Add to Cart
-              </button>
+              
             </div>
           </div>
         ))}

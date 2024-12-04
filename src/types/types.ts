@@ -1,20 +1,30 @@
 export type MenuType = {
-    id: string;
-    slug: string;
-    title: string;
-    desc?: string;
-    img?: string;
-    color: string;
-  }[];
+  id: string;
+  slug: string;
+  title: string;
+  desc?: string;
+  img?: string;
+  color: string;
+}[];
 
-  export type ProductType = {
-    id: string;
-    title: string;
-    desc?: string;
-    img?: string;
-    price: number;
-    options?: { title: string; additionalPrice: number }[];
-  };
+export type ProductType = {
+  id: string;
+  title: string;
+  desc?: string;
+  img?: string;
+  price: number;
+  options?: { title: string; additionalPrice: number }[];
+};
+
+export type OrderType = {
+  id: string;
+  userEmail: string;
+  price: number;
+  products: CartItemType[];
+  status: string;
+  createdAt: Date;
+  intent_id?: String;
+};
 
 export type CartItemType = {
   id: string;
@@ -32,6 +42,6 @@ export type CartType = {
 };
 
 export type ActionTypes = {
-  addToCart: (item: CartItemType) => void;
-  removeFromCart: (item: CartItemType) => void;
+  addToCart:(item:CartItemType)=> void;
+  removeFromCart:(item:CartItemType)=> void;
 }
