@@ -94,3 +94,11 @@ model Order {
   user      User     @relation(fields: [userEmail], references: [email])
   userEmail String
 }
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}

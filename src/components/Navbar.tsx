@@ -28,7 +28,7 @@ const Navbar = () => {
       <div className="hidden md:flex flex-grow justify-center gap-8">
         <Link href="/" className="text-white hover:text-gray-300">Homepage</Link>
         <Link href="/menu" className="text-white hover:text-gray-300">Menu</Link>
-        <Link href="/" className="text-white hover:text-gray-300">Contact</Link>
+        <Link href="/contact" className="text-white hover:text-gray-300">Contact</Link>
       </div>
 
       {/* MOBILE MENU */}
