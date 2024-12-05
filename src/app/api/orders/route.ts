@@ -1,9 +1,9 @@
 import { getAuthSession } from "@/utils/auth";
 import { prisma } from "@/utils/connect";
-import {  NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // FETCH ALL ORDERS
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
   const session = await getAuthSession();
 
   if (session) {
@@ -14,7 +14,7 @@ export const GET = async () => {
       }
       const orders = await prisma.order.findMany({
         where: {
-         // userEmail: session.user.email!,
+          userEmail: session.user.email!,
         },
       });
       return new NextResponse(JSON.stringify(orders), { status: 200 });
@@ -34,16 +34,16 @@ export const GET = async () => {
 };
 
 // CREATE ORDER
-export const POST = async () => {
+export const POST = async (req: NextRequest) => {
   const session = await getAuthSession();
 
   if (session) {
     try {
-      //const body = await req.json();
-      // const order = await prisma.order.create({
-      //   data: body,
-      // });
-      //return new NextResponse(JSON.stringify(order), { status: 201 });
+      const body = await req.json();
+      const order = await prisma.order.create({
+        data: body,
+      });
+      return new NextResponse(JSON.stringify(order), { status: 201 });
     } catch (err) {
       console.log(err);
       return new NextResponse(
